@@ -1,8 +1,9 @@
-import {Card, CardBody, CardFooter, Image, Pagination} from "@nextui-org/react";
+import {Card, CardBody, CardFooter, Image} from "@nextui-org/react";
 import Link from "next/link";
+import { CustomPagination } from "./pagination";
 
 const fetchProducts = async (page) => {
-	const res = await fetch(`http://localhost:8000/products/?page=${page}`);
+	const res = await fetch(`http://localhost:8000/products?page=${page}`, {cache: 'no-cache'});
  
   if (!res.ok) {
     throw new Error('Ошибка получения данных.')
@@ -11,11 +12,13 @@ const fetchProducts = async (page) => {
   return res.json()
 };
 
-const Grid = async ({currentPage, onPageChange}) => {
+const Grid = async ({currentPage}) => {
 	const products = await fetchProducts(currentPage);
+
 	if (!products || !products.results) return null
+
 	return (
-		<div className="flex flex-col">
+		<div className="relative w-full flex flex-col">
 			<div className="gap-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 				{products.results.map(item => (
 						<Card key={item.id} shadow="sm" isPressable>
@@ -26,7 +29,7 @@ const Grid = async ({currentPage, onPageChange}) => {
 									radius="lg"
 									width="100%"
 									alt={item.name}
-									className="w-full object-cover h-[140px]"
+									className="w-full object-cover h-[200px]"
 									src={item.photo}
 								/>
 							</CardBody>
@@ -38,7 +41,7 @@ const Grid = async ({currentPage, onPageChange}) => {
 						</Card>
 				))}
 			</div>
-			<Pagination className = "fixed bottom-[15px] left-1/2 z-50" total={Math.ceil(products.count/10)} page = {Number(currentPage)} onChange={page => onPageChange(page)}/>
+			<CustomPagination count={products.count} currentPage={currentPage}/>
 		</div>
 	);
 };

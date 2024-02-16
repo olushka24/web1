@@ -1,4 +1,5 @@
-import {Card, CardBody, CardFooter, Image} from "@nextui-org/react";
+import { ProductDetails } from "@/components/product-details";
+import {Button, Card, CardBody, CardFooter, Image} from "@nextui-org/react";
 
 async function getProduct(productId) {
   const res = await fetch(`http://localhost:8000/product/${productId}`)
@@ -6,32 +7,25 @@ async function getProduct(productId) {
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
-  console.log(res.json())
+  
   return res.json()
 }
 
 export default async function ProductPage({params}) {
-	const item = getProduct(params.id);
-  console.log(item);
+	const item = await getProduct(params.id);
+
 	return (
-			<Card shadow="sm" className="flex-1">
-          <CardBody className="overflow-visible p-0">
+    <div className="flex flex-col lg:flex-row gap-[50px]">
+			<div className="flex-1">
             <Image
               shadow="sm"
               radius="lg"
               width="100%"
               alt={item.name}
-              className="w-full object-cover h-[140px]"
-              src={item.photo}
-            />
-						<p>
-							{item.description}
-						</p>
-          </CardBody>
-          <CardFooter className="text-small justify-between">
-            <b>{item.name}</b>
-            <p className="text-default-500">{item.price}</p>
-          </CardFooter>
-        </Card>
+              className="w-full object-cover"
+              src={item.photo}/>
+        </div>
+        <ProductDetails item={item}/>
+      </div>  
 	);
 }

@@ -15,6 +15,7 @@ import clsx from "clsx";
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
 	SearchIcon,
+	CartIcon
 } from "@/components/icons";
 
 export const Navbar = () => {
